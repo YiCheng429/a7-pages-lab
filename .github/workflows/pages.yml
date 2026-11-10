@@ -1,0 +1,62 @@
+name: Pages release gate
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      break_link:
+        description: 'Demo only: add a broken internal link to the candidate'
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: github-pages-release
+  cancel-in-progress: false
+jobs:
+  candidate:
+    name: Build and validate candidate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Inject disposable failure
+        if: github.event_name == 'workflow_dispatch' && inputs.break_link
+        run: |
+          printf '\n[Release gate test](%s)\n' './__missing-release-gate__.html' >> README.md
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Validate artifact
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          printf '%s/%s/%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > _site/version.txt
+          python3 scripts/validate.py _site --base-path "$BASE_PATH"
+      - name: Upload validated artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+  deploy:
+    name: Deploy verified artifact
+    needs: candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

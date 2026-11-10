@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A DevOps lab for GitHub activity automation and gated releases.">
+  <title>{{ page.title | escape }} · DevOps A7</title>
+  <link rel="stylesheet" href="{{ '/assets/ledger.css' | relative_url }}">
+</head>
+<body>
+  <a class="skip" href="#activity">Skip to activity</a>
+  <header class="mast">
+    <span>DevOps / Assignment 7</span>
+    <a href="#activity">Activity ↘</a>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="title">
+      <h1 id="title">Release<br>ledger<span>.</span></h1>
+      <div class="intro">
+        <p>A GitHub Pages lab that builds an activity feed and checks the result before it goes live.</p>
+        <a href="./version.txt">View build version ↗</a>
+      </div>
+    </section>
+    <section class="activity" id="activity" aria-label="GitHub activity">
+      {{ content | replace_first: '<h1', '<h2' | replace_first: '</h1>', '</h2>' }}
+    </section>
+    <section class="release" aria-labelledby="release-title">
+      <h2 id="release-title">What gets released?</h2>
+      <p>Jekyll builds the homepage from the README. The gate checks the rendered activity and internal links. Only a passing artifact is uploaded for deployment.</p>
+    </section>
+  </main>
+  <footer>GitHub Pages · DevOps CI/CD lab</footer>
+</body>
+</html>

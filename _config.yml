@@ -1,0 +1,8 @@
+title: Release ledger
+lang: en
+markdown: kramdown
+exclude:
+  - scripts
+  - OPERATIONS.md
+  - Gemfile
+  - Gemfile.lock

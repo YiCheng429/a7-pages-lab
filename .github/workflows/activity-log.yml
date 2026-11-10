@@ -1,0 +1,30 @@
+name: Update activity log
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: activity-log
+  cancel-in-progress: false
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require repository secret
+        env:
+          ACTIVITY_TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          if [ -z "$ACTIVITY_TOKEN" ]; then
+            echo "::error::Add your expiring classic PAT as the TOKEN Actions repository secret."
+            exit 1
+          fi
+      - uses: TheDanniCraft/activity-log@v1
+        with:
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          HIDE_DETAILS_ON_PRIVATE_REPOS: 'true'
