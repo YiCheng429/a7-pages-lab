@@ -30,6 +30,9 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.break_link
         run: |
           printf '\n[Release gate test](%s)\n' './__missing-release-gate__.html' >> README.md
+      - name: Stamp candidate version
+        run: |
+          printf '%s/%s/%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > version.txt
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
@@ -39,7 +42,6 @@ jobs:
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: |
-          printf '%s/%s/%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > _site/version.txt
           python3 scripts/validate.py _site --base-path "$BASE_PATH"
       - name: Upload validated artifact
         uses: actions/upload-pages-artifact@v4
