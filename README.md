@@ -13,5 +13,4 @@ DevOps · Assignment 7
 7. 📝 Committed to master in [YiCheng429/activity-log](https://github.com/YiCheng429/activity-log/commit/d784c80344a2cf8fd0215c99450ff3292e14cd01)
 8. 📝 Committed to master in [YiCheng429/activity-log](https://github.com/YiCheng429/activity-log/commit/9d4f73ce6b74f9a520e49720167917b9b383256a)
 9. 📝 Committed to master in [YiCheng429/activity-log](https://github.com/YiCheng429/activity-log/commit/e89ba2cfb314fbefe39d832afca17965a95b471b)
-10. 📝 Committed to master in [YiCheng429/activity-log](https://github.com/YiCheng429/activity-log/commit/912511f5210418d5566cf03339cbbeadf8fa472c)
 <!--END_SECTION:activity-->
